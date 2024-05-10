@@ -1,9 +1,7 @@
 """Main funda scraper module"""
-import argparse
 import datetime
 import json
 import multiprocessing as mp
-import os
 from typing import List, Optional
 from pathlib import Path
 
@@ -13,9 +11,9 @@ from bs4 import BeautifulSoup
 from tqdm import tqdm
 from tqdm.contrib.concurrent import process_map
 
-from funda_scraper.config.core import config
-from funda_scraper.preprocess import clean_date_format, preprocess_data
-from funda_scraper.utils import logger
+from funda.config.core import config
+from funda.preprocess import clean_date_format, preprocess_data
+from funda.logging import logger
 
 
 from dataclasses import dataclass
@@ -26,13 +24,13 @@ from funda.types import HousingType
 class FundaScraper(object):
     area: str
     want_to: HousingType  # @TODO: rename
-    page_start: int = 1,
-    n_pages: int = 1,
-    find_past: bool = False,
-    min_price: Optional[int] = None,
-    max_price: Optional[int] = None,
-    days_since: Optional[int] = None,
-    property_type: Optional[str] = None,
+    page_start: int = 1
+    n_pages: int = 1
+    find_past: bool = False
+    min_price: Optional[int] = None
+    max_price: Optional[int] = None
+    days_since: Optional[int] = None
+    property_type: Optional[str] = None
 
     def __post_init__(self):
         self.area = self.area.lower().replace(" ", "-")
@@ -99,7 +97,7 @@ class FundaScraper(object):
                 item_list = self._get_links_from_one_parent(
                     f"{main_url}&search_result={page_index}"
                 )
-                urls.add(item_list)
+                urls |= set(item_list)
             except IndexError:
                 self.page_end = page_index
                 logger.warning(f"*** The last available page is {self.page_end} ***")
@@ -226,7 +224,7 @@ class FundaScraper(object):
             tmp_dir = self._create_temporal_directory()
             date = str(datetime.datetime.now().date()).replace("-", "")
             status = "unavailable" if self.find_past else "unavailable"
-            filepath = f"{tmp_dir}/houseprice_{date}_{self.area}_{want_to.value}_{status}_{len(self.links)}.csv"
+            filepath = f"{tmp_dir}/houseprice_{date}_{self.area}_{self.want_to.value}_{status}_{len(self.links)}.csv"
         df.to_csv(filepath, index=False)
         logger.info(f"*** File saved: {filepath}. ***")
 
@@ -256,8 +254,3 @@ class FundaScraper(object):
 
         logger.info("*** Done! ***")
         return df
-
-
-
-    args = parser.parse_args()
-    
