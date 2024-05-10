@@ -9,7 +9,6 @@ from funda.logging import logger
 
 
 async def whereis(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    #chat_id = update.effective_message.chat_id
     try:
         address = " ".join(context.args)
         screenshot_path = Path(f'data/{address}.png')
