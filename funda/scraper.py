@@ -192,7 +192,14 @@ class FundaScraper(object):
                     pass
                 result[4] = update_list_since
 
-        photos_string = ", ".join(p.get("data-lazy-srcset") for p in soup.select(self.selectors.photo))
+        photos = [
+            max(
+                group.get('data-lazy-srcset').split(', '), 
+                key=lambda x: int(x.split()[1][:-1]),
+            ).split()[0]
+            for group in soup.select(self.selectors.photo)
+        ]
+        photos_string = ' '.join(photos)
 
         # Clean up the retried result from one page
         result = [r.replace("\n", "").replace("\r", "").strip() for r in result]

@@ -7,7 +7,9 @@ from funda.utils import positive_integer
 from funda.scraper import FundaScraper
 
 import pandas as pd
+from pandas.core.series import Series
 from funda.utils import find_zip_code
+from funda.report import find_photos
 
 
 app = typer.Typer()
@@ -42,18 +44,19 @@ def scrape(
 @app.command()
 def from_link(
     link: str = typer.Argument(..., help='Link to funda'),
-) -> pd.DataFrame:
+) -> Series:
     funda_scraper = FundaScraper()
     result = funda_scraper.scrape_one_link(link)
 
     df = pd.DataFrame({key: [] for key in funda_scraper.selectors.keys()})
     df.loc[0] = result
     df["zip_code"] = df["zip_code"].map(find_zip_code)
+    df['photos'] = df['photo'].map(lambda text: ' '.join(photo_link for photo_link in text.split() if 'http' in photo_link))
 
-    print(df.loc[0])
-    from funda.report import to_markdown
-    to_markdown(df.loc[0]).save(Path('tmp.md'))
-    #return df
+    listing = df.loc[0]
+
+    find_photos(listing, force=True)
+    return listing
 
 if __name__ == '__main__':
     app()

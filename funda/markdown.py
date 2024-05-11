@@ -40,7 +40,6 @@ class MarkdownDocument:
         :return:
         """
         self._contents.write(text)
-        self._contents.write('\n')
         return self
 
     def append_text_indented(self, text: str, depth: int):
@@ -64,7 +63,44 @@ class MarkdownDocument:
         return result
 
     def append_heading(self, text, level=1):
-        self.append_text(level*'#' +' ' + text)
+        # self.append_text(level*'#' +' ' + text)
+        self.append_text(f'*{text}*')
+
+    def add_bold(self, text, breakline: bool = False):
+        self.append_text(f'*{text}*')
+        if breakline:
+            self.append_text('\n')
+        return self
+
+    def add_normal(self, text, breakline: bool = False):
+        self.append_text(text)
+        if breakline:
+            self.append_text('\n')
+        return self
+
+    def add_italic(self, text, breakline: bool = False):
+        self.append_text(f'_{text}_')
+        if breakline:
+            self.append_text('\n')
+        return self
+
+    def add_underline(self, text, breakline: bool = False):
+        self.append_text(f'__{text}__')
+        if breakline:
+            self.append_text('\n')
+        return self
+
+    def add_inline(self, text, breakline: bool = False):
+        self.append_text(f'`{text}`')
+        if breakline:
+            self.append_text('\n')
+        return self
+
+    def add_block(self, text, breakline: bool = False):
+        self.append_text(f'>{text}')
+        if breakline:
+            self.append_text('\n')
+        return self
 
     def append_image_link(self, node_text, location, decoration):
         self.append_text('\n\n![%s](%s)%s\n\n' % (node_text, location, decoration))

@@ -40,13 +40,14 @@ def take_screenshot(address: str, screenshot_path: Path) -> None:
     return image, route, supermarkets
 
 
-img, route, supermarkets = take_screenshot("Jan van de Capellelaan 41, Eindhoven", Path("data/test.png"))
+if __name__ == '__main__':
+    img, route, supermarkets = take_screenshot("Jan van de Capellelaan 41, Eindhoven", Path("data/test.png"))
 
-import pprint
-from datetime import timedelta
+    import pprint
+    from datetime import timedelta
 
-pprint.pprint(route, indent=2)
+    pprint.pprint(route, indent=2)
 
-print(f'time: {timedelta(milliseconds=route["paths"][0]["time"])}')
+    print(f'time: {timedelta(milliseconds=route["paths"][0]["time"])}')
 
-pprint.pprint(supermarkets, indent=2)
+    pprint.pprint(supermarkets, indent=2)
