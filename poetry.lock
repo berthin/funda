@@ -1100,6 +1100,17 @@ docs = ["sphinx (!=5.2.0,!=5.2.0.post0,!=7.2.5)", "sphinx-rtd-theme"]
 test = ["pretend", "pytest (>=3.0.1)", "pytest-rerunfailures"]
 
 [[package]]
+name = "pypandoc"
+version = "1.13"
+description = "Thin wrapper for pandoc."
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "pypandoc-1.13-py3-none-any.whl", hash = "sha256:4c7d71bf2f1ed122aac287113b5c4d537a33bbc3c1df5aed11a7d4a7ac074681"},
+    {file = "pypandoc-1.13.tar.gz", hash = "sha256:31652073c7960c2b03570bd1e94f602ca9bc3e70099df5ead4cea98ff5151c1e"},
+]
+
+[[package]]
 name = "pypydispatcher"
 version = "2.1.2"
 description = "Multi-producer-multi-consumer signal dispatching mechanism"
@@ -1414,6 +1425,20 @@ Pillow = "*"
 requests = "*"
 
 [[package]]
+name = "tabulate"
+version = "0.9.0"
+description = "Pretty-print tabular data"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "tabulate-0.9.0-py3-none-any.whl", hash = "sha256:024ca478df22e9340661486f85298cff5f6dcdba14f3813e8830015b9ed1948f"},
+    {file = "tabulate-0.9.0.tar.gz", hash = "sha256:0095b12bf5966de529c0feb1fa08671671b3368eec77d7ef7ab114be2c068b3c"},
+]
+
+[package.extras]
+widechars = ["wcwidth"]
+
+[[package]]
 name = "tldextract"
 version = "5.1.2"
 description = "Accurately separates a URL's subdomain, domain, and public suffix, using the Public Suffix List (PSL). By default, this includes the public ICANN TLDs and their exceptions. You can optionally support the Public Suffix List's private domains as well."
@@ -1641,4 +1666,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "db447ceb7a2f3508560203164ca2dda00f935f0db1142c7a201a40f56f0c2385"
+content-hash = "7925f3ec54c8dca6d5f2d7dbbae90e677de8adecba2bcd7315d4a5962aad9beb"

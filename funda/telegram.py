@@ -4,8 +4,13 @@ from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 from os import environ
 from pathlib import Path
 
+import typer
+
 from funda.map import take_screenshot
 from funda.logging import logger
+from funda.main import from_link as cli_from_link
+
+app = typer.Typer()
 
 
 async def whereis(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -17,11 +22,26 @@ async def whereis(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     except Exception as error:
         logger.error(error)
         await update.message.reply_text('Unable to retrieve location, see logs.')
-    #await update.message.reply_text(f'Hello {update.effective_user.first_name}')
 
 
-app = ApplicationBuilder().token(environ.get('TELEGRAM_TOKEN')).build()
+async def from_link(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    try:
+        link = " ".join(context.args)
+        result = cli_from_link(link) 
+        await update.message.reply_markdown(result.to_markdown())
+    except Exception as error:
+        logger.error(error)
+        await update.message.reply_text('Unable to retrieve location, see logs.')
 
-app.add_handler(CommandHandler("whereis", whereis))
 
-app.run_polling()
+@app.command
+def run():
+    """Run the telegram bot"""
+
+    app = ApplicationBuilder().token(environ.get('TELEGRAM_TOKEN')).build()
+    app.add_handler(CommandHandler("whereis", whereis))
+    app.run_polling()
+
+
+if __name__ == '__name__':
+    app()

@@ -4,6 +4,7 @@ import json
 import multiprocessing as mp
 from typing import List, Optional
 from pathlib import Path
+import re
 
 import pandas as pd
 import requests
@@ -14,6 +15,7 @@ from tqdm.contrib.concurrent import process_map
 from funda.config.core import config
 from funda.preprocess import clean_date_format, preprocess_data
 from funda.logging import logger
+from funda.utils import find_zip_code
 
 
 from dataclasses import dataclass
@@ -22,8 +24,8 @@ from funda.types import HousingType
 
 @dataclass
 class FundaScraper(object):
-    area: str
-    want_to: HousingType  # @TODO: rename
+    area: str = 'Eindhoven'
+    want_to: HousingType = HousingType.buy
     page_start: int = 1
     n_pages: int = 1
     find_past: bool = False
@@ -48,7 +50,7 @@ class FundaScraper(object):
 
     def __repr__(self):
         return (
-            f"Funda(area={self.area}, "
+            f"FundaScraper(area={self.area}, "
             f"housing_type={self.want_to}, "
             f"n_pages={self.n_pages}, "
             f"page_start={self.page_start}, "
@@ -208,9 +210,10 @@ class FundaScraper(object):
         pools = mp.cpu_count()
         content = process_map(self.scrape_one_link, self.links, max_workers=pools)
 
-        for i, c in enumerate(content):
+        for c in content:
             df.loc[len(df)] = c
 
+        df["zip_code"] = df["zip_code"].map(find_zip_code)
         df["city"] = df["url"].map(lambda x: x.split("/")[4])
         df["log_id"] = datetime.datetime.now().strftime("%Y%m-%d%H-%M%S")
         if not self.find_past:
