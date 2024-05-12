@@ -398,6 +398,20 @@ dev = ["autoflake (==1.4)", "charset-normalizer (>=3.3.2,<4)", "coverage (==6.4.
 test = ["charset-normalizer (>=3.3.2,<4)", "cryptography (==38.0.3)", "fastapi (==0.100.0)", "httpx (==0.23.1)", "proxy.py (==2.4.3)", "pytest (==7.1.2)", "pytest-asyncio (==0.19.0)", "pytest-trio (==0.7.0)", "python-multipart (==0.0.6)", "trio (==0.21.0)", "trio-typing (==0.7.0)", "trustme (==0.9.0)", "types-certifi (==2021.10.8.2)", "uvicorn (==0.18.3)", "websockets (==11.0.3)"]
 
 [[package]]
+name = "diot"
+version = "0.2.3"
+description = "Python dictionary with dot notation."
+optional = false
+python-versions = ">=3.7,<4.0"
+files = [
+    {file = "diot-0.2.3-py3-none-any.whl", hash = "sha256:defd4556bd961327cbfd497f63fcb9d0d79a649bbc8932f26d94dd25a7832e1c"},
+    {file = "diot-0.2.3.tar.gz", hash = "sha256:0b8ccbe3813acda67665ea9025d4eea7f73b2df4e2ab16c5c3f1da8b0dbba4cf"},
+]
+
+[package.dependencies]
+inflection = ">=0.5,<0.6"
+
+[[package]]
 name = "exceptiongroup"
 version = "1.2.1"
 description = "Backport of PEP 654 (exception groups)"
@@ -556,6 +570,17 @@ files = [
 [package.extras]
 mypy = ["click (>=6.0)", "mypy (==0.812)", "twisted (>=16.4.0)"]
 scripts = ["click (>=6.0)", "twisted (>=16.4.0)"]
+
+[[package]]
+name = "inflection"
+version = "0.5.1"
+description = "A port of Ruby on Rails inflector to Python"
+optional = false
+python-versions = ">=3.5"
+files = [
+    {file = "inflection-0.5.1-py2.py3-none-any.whl", hash = "sha256:f38b2b640938a4f35ade69ac3d053042959b62a0f1076a5bbaa1b9526605a8a2"},
+    {file = "inflection-0.5.1.tar.gz", hash = "sha256:1a29730d366e996aaacffb2f1f1cb9593dc38e2ddd30c91250c6dde09ea9b417"},
+]
 
 [[package]]
 name = "itemadapter"
@@ -1694,4 +1719,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "67bfd5e721943776b89539d11744b56ed4264a94ae83940d85ebfa572fceaf97"
+content-hash = "77722e879b8775001d0af181545448130eb26bfac784d5e36faf80bd51846db4"

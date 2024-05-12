@@ -6,9 +6,9 @@ import yaml
 from diot import Diot
 from yaml.loader import SafeLoader
 
-import funda_scraper
+import funda
 
-PACKAGE_ROOT = Path(funda_scraper.__file__).resolve().parent
+PACKAGE_ROOT = Path(funda.__file__).resolve().parent
 CONFIG_PATH = PACKAGE_ROOT / "config/config.yaml"
 
 with open(CONFIG_PATH) as f:
