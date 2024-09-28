@@ -41,6 +41,15 @@ async def whereis(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await update.message.reply_text('Unable to retrieve location, see logs.')
 
 
+async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    try:
+        reply = ask_copilot(' '.join(context.args))
+        await update.message.reply_text(reply)
+    except Exception as error:
+        logger.error(error)
+        await update.message.reply_text('Unable to retrieve location, see logs.')
+
+
 async def from_link(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     try:
         logger.info('Formatting message')
@@ -109,6 +118,7 @@ def run():
     logger.info('Starting app')
     app.add_handler(CommandHandler("whereis", whereis))
     app.add_handler(CommandHandler("from", from_link))
+    app.add_handler(CommandHandler("chat", chat))
     app.run_polling()
 
 

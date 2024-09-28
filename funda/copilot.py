@@ -1,5 +1,8 @@
 import requests
 import json
+import httpx
+import aiohttp
+from os import environ
 
 from funda.logging import logger
 
@@ -10,16 +13,74 @@ BODY_TEMPLATE = {
     'stream': True, 
     'messages': [
         {
-            'role': 'assistant',
-            'content': 'What can you do? Who are you?',
+            'role': 'system', 
+            'content': '''
+            You are a helpful footbal assistant AI.
+            You will be asked only football related questions and you are not allowed to talk about any other topics, In case the topic is not football
+            related, you must reply "Sorry, I'm a football AI. Please, restrain the content to football only.".
+            All of your responses must start with: "[Yo AI]: "
+            ''',
+        },
+        {
+            'role': 'user', 
+            'content': 'What is the best football team and why?',
         }
     ]
 }
+# response = client.chat.completions.create(
+#   model="gpt-3.5-turbo",
+#   messages=[
+#     {"role": "system", "content": "You are a helpful assistant."},
+#     {"role": "user", "content": "Who won the world series in 2020?"},
+#     {"role": "assistant", "content": "The Los Angeles Dodgers won the World Series in 2020."},
+#     {"role": "user", "content": "Where was it played?"}
+#   ]
+# )
 #lines = requests.post(url, json=body, stream=True).iter_lines()
+
+
+def test_cookie(message: str) -> str:
+    import uuid
+    import socket
+    take_ip_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    take_ip_socket.connect(("8.8.8.8", 80))
+    FORWARDED_IP: str = take_ip_socket.getsockname()[0]
+    HEADERS_INIT_CONVER = {
+        "authority": "www.bing.com",
+        "accept": "application/json",
+        "accept-language": "en-US;q=0.9",
+        "cache-control": "max-age=0",
+        "sec-ch-ua": '"Not/A)Brand";v="99", "Microsoft Edge";v="115", "Chromium";v="115"',
+        "sec-ch-ua-arch": '"x86"',
+        "sec-ch-ua-bitness": '"64"',
+        "sec-ch-ua-full-version": '"115.0.1901.188"',
+        "sec-ch-ua-full-version-list": '"Not/A)Brand";v="99.0.0.0", "Microsoft Edge";v="115.0.1901.188", "Chromium";v="115.0.5790.114"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-model": '""',
+        "sec-ch-ua-platform": '"Windows"',
+        "sec-ch-ua-platform-version": '"15.0.0"',
+        "upgrade-insecure-requests": "1",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.188",
+        "x-edge-shopping-flag": "1",
+        "x-forwarded-for": FORWARDED_IP,
+    }
+    headers = HEADERS_INIT_CONVER.copy()
+    _u_cookie = environ.get('COPILOT_TOKEN')
+    assert _u_cookie, 'You need to define your "_U" cookie in the envvars as "COPILOT_TOKEN".'
+    headers['Cookie'] = f'SUID=A; _U={_u_cookie}'
+    session = httpx.AsyncClient(
+        proxies=None,
+        timeout=900,
+        headers=HEADERS_INIT_CONVER,
+    )
+
+    cookies = {'_U': _u_cookie}
+    aio_session = aiohttp.ClientSession(cookies=cookies)
+
 
 def ask_copilot(message: str) -> str:
     body = BODY_TEMPLATE.copy()
-    body['messages'][0]['content'] = message
+    #body['messages'][1]['content'] = message
 
     try:
         logger.info(f'Trying to ask copilot: {message}')
